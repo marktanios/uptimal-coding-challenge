@@ -1,14 +1,14 @@
 # ignore data folder
 data/
 
-# Ignore all __pycache__ folders
+# ignore all __pycache__ folders
 __pycache__/
 
-# Ignore the entire virtual environment
+# ignore the entire virtual environment
 .venv/
 
-# Ignore all .pyc files
+# ignore all .pyc files
 *.pyc
 
-# Ignore all .pyo files (alternative compiled Python files)
+# ignore all .pyo files
 *.pyo
