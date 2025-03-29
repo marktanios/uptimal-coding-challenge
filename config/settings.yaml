@@ -1,0 +1,16 @@
+# settings.yaml
+
+# Data sources
+data_sources:
+  collision_dataset_path: "data/motor-vehicle-collisions-crashes.csv"
+  holidays_api: "https://date.nager.at/api/v3/PublicHolidays/{year}/US"
+
+# Output settings
+output:
+  save_path: "data/processed/nyc_collisions_enriched.parquet"
+  format: "parquet"
+
+# Logging settings
+logging:
+  level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  log_file: "logs/pipeline.log"
