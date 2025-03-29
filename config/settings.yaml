@@ -8,8 +8,12 @@ data_sources:
 
 # Output settings
 output:
-  save_path: "data/processed/nyc_collisions_enriched.parquet"
+  save_collision_dataset_path: "data/motor-vehicle-collisions-{year}-crashes.csv"
+  save_holiday_path: "data/holidays-{year}-response.json"
   format: "parquet"
+
+filtration:
+  year: 2025
 
 # Logging settings
 logging:
