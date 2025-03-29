@@ -2,6 +2,7 @@
 
 # Data sources
 data_sources:
+  collision_dataset_url: "https://data.cityofnewyork.us/api/views/h9gi-nx95/rows.csv?accessType=DOWNLOAD"
   collision_dataset_path: "data/motor-vehicle-collisions-crashes.csv"
   holidays_api: "https://date.nager.at/api/v3/PublicHolidays/{year}/US"
 
