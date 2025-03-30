@@ -9,6 +9,13 @@ from datetime import datetime, timedelta
 
 base_path = Path(__file__).resolve().parent.parent.parent
 
+def load_config():
+    try:
+        config_path = base_path / "config" / "settings.yaml"
+        with open(config_path, "r") as file:
+            return yaml.safe_load(file)
+    except Exception as e:
+        print(f"Unexpected error happened during reading configuration: {e}")
 
 def download_csv(url: str, save_path: str, overwrite: bool = False):
     """
@@ -99,7 +106,7 @@ def generate_date_dataframe(year: int):
     all_dates = pd.date_range(start=start_date, end=end_date, freq='D')
     df = pd.DataFrame({
         'date': all_dates.strftime('%m/%d/%Y'),  # Format as MM/DD/YYYY
-        'is_holiday': False,
+        'is_holiday_bool': False,
         'global': False,
         'states': None
     })
@@ -112,10 +119,9 @@ def merge_holiday_data(df: pd.DataFrame, holiday_json: str):
     for idx, row in df.iterrows():
         date_iso = datetime.strptime(row['date'], '%m/%d/%Y').strftime('%Y-%m-%d')
         if date_iso in holiday_dict:
-            df.at[idx, 'is_holiday'] = True
-            df.at[idx, 'global'] = holiday_dict[date_iso]['global']
-            df.at[idx, 'states'] = holiday_dict[date_iso]['counties'] if not holiday_dict[date_iso][
-                'global'] else None
+            df.at[idx, 'is_holiday_bool'] = True
+            df.at[idx, 'global_across_us'] = holiday_dict[date_iso]['global']
+            df.at[idx, 'states'] = holiday_dict[date_iso]['counties']
 
     return df
 
@@ -144,14 +150,6 @@ def load_csv_to_dataframe(file_path: str) -> pd.DataFrame:
         print(f"Error: {e}")
         return None
 
-def load_config():
-    try:
-        config_path = base_path / "config" / "settings.yaml"
-        with open(config_path, "r") as file:
-            return yaml.safe_load(file)
-    except Exception as e:
-        print(f"Unexpected error happened during reading configuration: {e}")
-
 def get_collision_dataset():
     # loading configuration
     config = load_config()
@@ -167,9 +165,8 @@ def get_collision_dataset():
     raw_collisions_df = load_csv_to_dataframe(collision_dataset_path)
 
     # filter for only 2025 data
-    filtration_year = config["filtration"]["year"]
     filtered_collisions_df = raw_collisions_df[raw_collisions_df["CRASH DATE"].dt.year == filtration_year]
-    print(f"Filtered collisions for 2025 year are: {len(filtered_collisions_df)} rows.")
+    print(f"Filtered collisions for {filtration_year} year are: {len(filtered_collisions_df)} rows.")
 
     # free the memory from raw data
     del raw_collisions_df

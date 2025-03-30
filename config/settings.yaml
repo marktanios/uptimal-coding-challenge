@@ -10,7 +10,7 @@ data_sources:
 output:
   save_collision_dataset_path: "data/motor-vehicle-collisions-{year}-crashes.csv"
   save_holiday_path: "data/holidays-{year}-response.json"
-  format: "parquet"
+  final_parquet_path: "data/output/nyc_crashes_ready_for_analysis.parquet"
 
 filtration:
   year: 2025
