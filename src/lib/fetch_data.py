@@ -1,4 +1,3 @@
-import os
 import json
 import yaml
 import requests
@@ -107,7 +106,7 @@ def generate_date_dataframe(year: int):
     df = pd.DataFrame({
         'date': all_dates.strftime('%m/%d/%Y'),  # Format as MM/DD/YYYY
         'is_holiday_bool': False,
-        'global': False,
+        'global_across_us': False,
         'states': None
     })
     return df
