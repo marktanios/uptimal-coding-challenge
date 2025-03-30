@@ -1,21 +1,17 @@
 # settings.yaml
 
-# Data sources
+# data sources
 data_sources:
   collision_dataset_url: "https://data.cityofnewyork.us/api/views/h9gi-nx95/rows.csv?accessType=DOWNLOAD"
   collision_dataset_path: "data/motor-vehicle-collisions-crashes.csv"
   holidays_api: "https://date.nager.at/api/v3/PublicHolidays/{year}/US"
 
-# Output settings
+# output settings
 output:
   save_collision_dataset_path: "data/motor-vehicle-collisions-{year}-crashes.csv"
   save_holiday_path: "data/holidays-{year}-response.json"
   final_parquet_path: "data/output/nyc_crashes_ready_for_analysis.parquet"
 
+# filtration settings
 filtration:
   year: 2025
-
-# Logging settings
-logging:
-  level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR, CRITICAL
-  log_file: "logs/pipeline.log"
