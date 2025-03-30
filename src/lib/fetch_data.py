@@ -73,7 +73,7 @@ def fetch_and_download_json_data_url(url, json_save_path, overwrite: bool = Fals
 
         # check if file exists
         if full_save_path.exists() and not overwrite:
-            print(f"Response file already exists: {full_save_path}")
+            print(f"Holiday Response file already exists: {full_save_path}")
             print("Skipping API call...")
             return  # Skip download
 
@@ -113,7 +113,25 @@ def generate_date_dataframe(year: int):
 
 def merge_holiday_data(df: pd.DataFrame, holiday_json: str):
     holidays = json.loads(holiday_json)
-    holiday_dict = {h['date']: h for h in holidays}
+    holiday_dict = {}
+
+    for h in holidays:
+        date = h["date"]
+
+        if date in holiday_dict:
+            # if the holiday already exists, update its counties list
+            existing_holiday = holiday_dict[date]
+
+            # ensure counties exist in both before merging
+            if existing_holiday["counties"] and h["counties"]:
+                existing_holiday["counties"].extend(h["counties"])
+                existing_holiday["counties"] = list(set(existing_holiday["counties"]))  # Remove duplicates
+            elif h["counties"]:  # if the new entry has counties but the existing doesn't
+                existing_holiday["counties"] = h["counties"]
+
+        else:
+            # if the date is not yet in the dictionary, add the holiday entry
+            holiday_dict[date] = h.copy()
 
     for idx, row in df.iterrows():
         date_iso = datetime.strptime(row['date'], '%m/%d/%Y').strftime('%Y-%m-%d')
@@ -164,7 +182,8 @@ def get_collision_dataset():
     raw_collisions_df = load_csv_to_dataframe(collision_dataset_path)
 
     # filter for only 2025 data
-    filtered_collisions_df = raw_collisions_df[raw_collisions_df["CRASH DATE"].dt.year == filtration_year]
+    raw_collisions_df["CRASH DATE"] = pd.to_datetime(raw_collisions_df["CRASH DATE"], format="%m/%d/%Y")
+    filtered_collisions_df = raw_collisions_df[raw_collisions_df["CRASH DATE"].dt.year == int(filtration_year)]
     print(f"Filtered collisions for {filtration_year} year are: {len(filtered_collisions_df)} rows.")
 
     # free the memory from raw data
