@@ -21,8 +21,6 @@ def save_to_parquet(df: pd.DataFrame):
     try:
         config = load_config()
         path_str = config["output"]["final_parquet_path"]
-        filtration_year = config["filtration"]["year"]
-        path_str = f"{filtration_year}_{path_str}"
         path = Path(path_str)
         full_path = base_path / path
         df.to_parquet(path=full_path)
